@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ayane Site</title>
+    <meta
+      name="description"
+      content="Ayane のシンプルな GitHub Pages サイトです。"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f3ee;
+        --panel: #fffaf4;
+        --text: #1f1b16;
+        --muted: #6b625a;
+        --accent: #8c5e3c;
+        --border: rgba(31, 27, 22, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+      }
+
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top, #fff 0%, var(--bg) 50%, #efe6dc 100%);
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+
+      main {
+        width: min(100%, 720px);
+        background: rgba(255, 250, 244, 0.88);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 40px 28px;
+        box-shadow: 0 18px 50px rgba(63, 45, 27, 0.12);
+        backdrop-filter: blur(10px);
+      }
+
+      .eyebrow {
+        margin: 0 0 12px;
+        color: var(--accent);
+        font-size: 0.92rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2rem, 6vw, 4rem);
+        line-height: 1.05;
+      }
+
+      p {
+        margin: 16px 0 0;
+        color: var(--muted);
+        font-size: 1.05rem;
+        line-height: 1.8;
+      }
+
+      .links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      a {
+        color: var(--text);
+        text-decoration: none;
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.65);
+        padding: 10px 16px;
+        border-radius: 999px;
+      }
+
+      a:hover {
+        border-color: rgba(140, 94, 60, 0.4);
+        color: var(--accent);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">GitHub Pages</p>
+      <h1>Ayane の Web サイト</h1>
+      <p>
+        このページは、GitHub Pages で公開するためのシンプルなトップページです。
+        必要に応じて、プロフィールやリンク、作品紹介をここに追加できます。
+      </p>
+      <div class="links">
+        <a href="mailto:hello@example.com">Contact</a>
+        <a href="https://github.com/" rel="noreferrer">GitHub</a>
+      </div>
+    </main>
+  </body>
+</html>
