@@ -779,10 +779,17 @@
 
         const blocks = [];
         const keyCenters = splashWhiteLayout.map(({ left }) => left + 30);
-        for (let i = 0; i < 4; i += 1) {
+        const blockCount = 4;
+        const laneIndices = Array.from({ length: splashWhiteLayout.length }, (_, index) => index);
+        for (let i = laneIndices.length - 1; i > 0; i -= 1) {
+          const swapIndex = Math.floor(Math.random() * (i + 1));
+          [laneIndices[i], laneIndices[swapIndex]] = [laneIndices[swapIndex], laneIndices[i]];
+        }
+
+        for (let i = 0; i < blockCount; i += 1) {
           const block = document.createElement("div");
           block.className = "fall-block";
-          const lane = i % splashWhiteLayout.length;
+          const lane = laneIndices[i];
           const center = keyCenters[lane];
           const duration = 0.9 + Math.random() * 0.7;
           const delay = Math.random() * -1.9;
