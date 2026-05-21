@@ -120,7 +120,7 @@
 
       .splash-keyboard {
         position: relative;
-        width: 720px;
+        width: 1500px;
         height: 210px;
         transform-origin: top left;
         border-radius: 0;
@@ -143,8 +143,8 @@
         position: absolute;
         top: -28px;
         width: 60px;
-        height: 18px;
-        border-radius: 10px;
+        height: 180px;
+        border-radius: 0;
         background: linear-gradient(180deg, rgba(255, 183, 82, 0.92), rgba(255, 127, 107, 0.92));
         box-shadow:
           0 0 18px rgba(255, 183, 82, 0.45),
@@ -512,7 +512,7 @@
         }
 
         .splash-keyboard {
-          width: 640px;
+          width: 1330px;
         }
       }
 
@@ -732,8 +732,11 @@
 
       function buildSplashKeyboard() {
         const splashKeys = [];
+        const splashWhiteLayout = Array.from({ length: 17 }, (_, index) => ({
+          left: index * 60
+        }));
 
-        whiteLayout.forEach(({ key, left }) => {
+        splashWhiteLayout.forEach(({ left }) => {
           const keyEl = document.createElement("div");
           keyEl.className = "white-key";
           keyEl.style.left = `${left}px`;
@@ -744,7 +747,26 @@
           splashKeys.push(keyEl);
         });
 
-        blackLayout.forEach(({ left }) => {
+        const splashBlackLayout = [
+          { left: 42 },
+          { left: 102 },
+          { left: 222 },
+          { left: 282 },
+          { left: 342 },
+          { left: 402 },
+          { left: 522 },
+          { left: 582 },
+          { left: 702 },
+          { left: 762 },
+          { left: 822 },
+          { left: 942 },
+          { left: 1002 },
+          { left: 1122 },
+          { left: 1182 },
+          { left: 1242 }
+        ];
+
+        splashBlackLayout.forEach(({ left }) => {
           const keyEl = document.createElement("div");
           keyEl.className = "black-key";
           keyEl.style.left = `${left}px`;
@@ -756,11 +778,11 @@
         });
 
         const blocks = [];
-        const keyCenters = whiteLayout.map(({ left }) => left + 30);
+        const keyCenters = splashWhiteLayout.map(({ left }) => left + 30);
         for (let i = 0; i < 13; i += 1) {
           const block = document.createElement("div");
           block.className = "fall-block";
-          const lane = i % whiteLayout.length;
+          const lane = i % splashWhiteLayout.length;
           const center = keyCenters[lane];
           const duration = 0.9 + Math.random() * 0.7;
           const delay = Math.random() * -1.9;
@@ -784,7 +806,7 @@
           window.innerWidth - 2 * Math.max(0, parseFloat(getComputedStyle(document.body).paddingLeft) || 24)
         );
         const scale = Math.min(1.35, availableWidth / baseWidth);
-        splashKeyboard.style.transform = `scale(${scale})`;
+          splashKeyboard.style.transform = `scale(${scale})`;
         splashKeyboard.parentElement.style.height = `${Math.round(210 * scale)}px`;
 
         const windowMs = 3000;
