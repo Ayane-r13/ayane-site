@@ -3,24 +3,29 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Ayane Site</title>
+    <title>ドイツ語音階ピアノゲーム</title>
     <meta
       name="description"
-      content="Ayane のシンプルでおしゃれな GitHub Pages サイトです。"
+      content="ドイツ語音階を見て、1オクターブのピアノ鍵盤をクリックして当てるゲームです。"
     />
     <style>
       :root {
-        color-scheme: light;
-        --bg: #f3efe8;
-        --bg-2: #e7dfd4;
-        --panel: rgba(255, 251, 245, 0.8);
-        --panel-strong: rgba(255, 255, 255, 0.92);
-        --text: #171412;
-        --muted: #655d55;
-        --accent: #b86b3f;
-        --accent-2: #395b5a;
-        --border: rgba(23, 20, 18, 0.1);
-        --shadow: 0 30px 90px rgba(52, 33, 17, 0.16);
+        color-scheme: dark;
+        --bg-0: #0d1020;
+        --bg-1: #151b33;
+        --panel: rgba(15, 18, 35, 0.78);
+        --panel-strong: rgba(20, 24, 46, 0.92);
+        --text: #f4f6ff;
+        --muted: #abb4d6;
+        --accent: #7ee0c3;
+        --accent-2: #ffbe6b;
+        --danger: #ff7b86;
+        --border: rgba(255, 255, 255, 0.12);
+        --shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+        --white-key: #f8f7f3;
+        --white-key-active: #d7f7ec;
+        --black-key: #1b1e2f;
+        --black-key-active: #4d5ef5;
       }
 
       * {
@@ -34,16 +39,16 @@
       }
 
       body {
-        font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua",
-          Georgia, serif;
+        font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
         color: var(--text);
         background:
-          radial-gradient(circle at top left, rgba(184, 107, 63, 0.18), transparent 34%),
-          radial-gradient(circle at top right, rgba(57, 91, 90, 0.18), transparent 28%),
-          linear-gradient(180deg, #faf7f2 0%, var(--bg) 40%, var(--bg-2) 100%);
+          radial-gradient(circle at top left, rgba(126, 224, 195, 0.18), transparent 28%),
+          radial-gradient(circle at 80% 15%, rgba(255, 190, 107, 0.16), transparent 26%),
+          radial-gradient(circle at bottom right, rgba(77, 94, 245, 0.16), transparent 34%),
+          linear-gradient(180deg, var(--bg-0), var(--bg-1));
         display: grid;
         place-items: center;
-        padding: 28px;
+        padding: 24px;
         overflow-x: hidden;
       }
 
@@ -53,182 +58,465 @@
         inset: 0;
         pointer-events: none;
         background-image:
-          linear-gradient(rgba(255, 255, 255, 0.18) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255, 255, 255, 0.18) 1px, transparent 1px);
-        background-size: 64px 64px;
-        mask-image: radial-gradient(circle at center, black 42%, transparent 92%);
-        opacity: 0.25;
+          linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+        background-size: 60px 60px;
+        opacity: 0.22;
+        mask-image: radial-gradient(circle at center, black 45%, transparent 92%);
       }
 
       main {
-        width: min(100%, 820px);
+        width: min(100%, 1100px);
         position: relative;
         background: linear-gradient(180deg, var(--panel-strong), var(--panel));
         border: 1px solid var(--border);
-        border-radius: 32px;
-        padding: clamp(28px, 5vw, 56px);
+        border-radius: 30px;
+        padding: clamp(20px, 4vw, 36px);
         box-shadow: var(--shadow);
-        backdrop-filter: blur(10px);
-        isolation: isolate;
+        backdrop-filter: blur(14px);
       }
 
-      main::after {
-        content: "";
-        position: absolute;
-        inset: 16px;
-        border-radius: 22px;
-        border: 1px solid rgba(255, 255, 255, 0.45);
-        pointer-events: none;
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        align-items: end;
+        flex-wrap: wrap;
       }
 
       .eyebrow {
-        margin: 0 0 12px;
-        color: var(--accent-2);
-        font: 700 0.78rem/1.2 system-ui, -apple-system, BlinkMacSystemFont,
-          "Segoe UI", sans-serif;
-        letter-spacing: 0.24em;
+        margin: 0 0 8px;
+        color: var(--accent);
+        font: 700 0.8rem/1.2 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        letter-spacing: 0.22em;
         text-transform: uppercase;
       }
 
       h1 {
         margin: 0;
-        max-width: 10ch;
-        font-size: clamp(2.6rem, 8vw, 5.4rem);
-        line-height: 0.95;
+        font-size: clamp(2rem, 5vw, 3.8rem);
+        line-height: 1;
         letter-spacing: -0.05em;
       }
 
-      .lead {
-        margin: 20px 0 0;
-        max-width: 42rem;
+      .sub {
+        margin: 10px 0 0;
         color: var(--muted);
-        font: 400 clamp(1rem, 2vw, 1.14rem)/1.9 system-ui, -apple-system,
-          BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font: 400 1rem/1.8 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        max-width: 50rem;
       }
 
-      .links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 14px;
-        margin-top: 34px;
-      }
-
-      a {
-        color: var(--text);
-        text-decoration: none;
-        border: 1px solid rgba(23, 20, 18, 0.12);
-        background: rgba(255, 255, 255, 0.7);
-        padding: 12px 18px;
-        border-radius: 999px;
-        font: 600 0.95rem/1 system-ui, -apple-system, BlinkMacSystemFont,
-          "Segoe UI", sans-serif;
-        letter-spacing: 0.02em;
-        transition:
-          transform 180ms ease,
-          border-color 180ms ease,
-          background 180ms ease,
-          box-shadow 180ms ease;
-      }
-
-      a:hover {
-        transform: translateY(-2px);
-        border-color: rgba(184, 107, 63, 0.35);
-        background: rgba(255, 255, 255, 0.95);
-        box-shadow: 0 10px 24px rgba(184, 107, 63, 0.15);
-      }
-
-      .accent {
-        color: var(--accent);
-      }
-
-      .rule {
-        width: 84px;
-        height: 2px;
-        margin: 28px 0;
-        border-radius: 999px;
-        background: linear-gradient(90deg, var(--accent), transparent);
-      }
-
-      .meta {
-        margin-top: 30px;
+      .hud {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 14px;
+        grid-template-columns: repeat(3, minmax(110px, 1fr));
+        gap: 12px;
+        min-width: min(100%, 380px);
       }
 
-      .card {
-        padding: 16px 18px;
-        border-radius: 20px;
-        background: rgba(255, 255, 255, 0.56);
-        border: 1px solid rgba(23, 20, 18, 0.08);
+      .stat {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.04);
+        padding: 12px 14px;
       }
 
-      .card strong {
+      .stat span {
         display: block;
-        margin-bottom: 6px;
-        font: 700 0.88rem/1.2 system-ui, -apple-system, BlinkMacSystemFont,
-          "Segoe UI", sans-serif;
-        color: var(--accent-2);
-        letter-spacing: 0.08em;
+        color: var(--muted);
+        font: 600 0.74rem/1.2 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
       }
 
-      .card span {
+      .stat strong {
         display: block;
+        margin-top: 6px;
+        font: 700 1.15rem/1.2 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      .game {
+        margin-top: 22px;
+        display: grid;
+        grid-template-columns: minmax(280px, 360px) 1fr;
+        gap: 18px;
+      }
+
+      .card {
+        border-radius: 24px;
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.05);
+        padding: 18px;
+      }
+
+      .target {
+        min-height: 220px;
+        display: grid;
+        align-content: center;
+        gap: 14px;
+        text-align: center;
+      }
+
+      .target-label {
+        margin: 0;
         color: var(--muted);
-        font: 400 0.98rem/1.6 system-ui, -apple-system, BlinkMacSystemFont,
-          "Segoe UI", sans-serif;
+        font: 700 0.82rem/1.2 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .note {
+        margin: 0;
+        font-size: clamp(3rem, 11vw, 6rem);
+        line-height: 0.95;
+        letter-spacing: -0.08em;
+      }
+
+      .feedback {
+        min-height: 2.2em;
+        margin: 0;
+        font: 700 1.05rem/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      .feedback.ok {
+        color: var(--accent);
+      }
+
+      .feedback.ng {
+        color: var(--danger);
+      }
+
+      .buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 18px;
+        justify-content: center;
+      }
+
+      button {
+        appearance: none;
+        border: 0;
+        cursor: pointer;
+        font: inherit;
+      }
+
+      .action {
+        color: var(--text);
+        background: linear-gradient(135deg, rgba(126, 224, 195, 0.2), rgba(77, 94, 245, 0.2));
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        padding: 12px 18px;
+        border-radius: 999px;
+        font: 700 0.95rem/1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      .keyboard-wrap {
+        overflow-x: auto;
+        padding-bottom: 4px;
+      }
+
+      .keyboard {
+        position: relative;
+        height: 270px;
+        min-width: 720px;
+        user-select: none;
+      }
+
+      .white-key,
+      .black-key {
+        position: absolute;
+        bottom: 0;
+        display: flex;
+        align-items: end;
+        justify-content: center;
+        border-radius: 0 0 12px 12px;
+        transition:
+          transform 90ms ease,
+          background 120ms ease,
+          box-shadow 120ms ease;
+      }
+
+      .white-key {
+        width: 60px;
+        height: 100%;
+        background: linear-gradient(180deg, #ffffff, var(--white-key));
+        border: 1px solid rgba(0, 0, 0, 0.14);
+        color: #18202d;
+        z-index: 1;
+      }
+
+      .white-key .label {
+        margin-bottom: 14px;
+        font: 700 0.88rem/1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      .black-key {
+        width: 38px;
+        height: 56%;
+        background: linear-gradient(180deg, #34384d, var(--black-key));
+        color: #f6f7fb;
+        z-index: 2;
+        box-shadow: 0 10px 18px rgba(0, 0, 0, 0.34);
+      }
+
+      .black-key .label {
+        margin-bottom: 10px;
+        font: 700 0.72rem/1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      .white-key.active {
+        background: linear-gradient(180deg, #fff, var(--white-key-active));
+        transform: translateY(2px);
+        box-shadow: inset 0 0 0 2px rgba(126, 224, 195, 0.75);
+      }
+
+      .black-key.active {
+        background: linear-gradient(180deg, #5666ff, var(--black-key-active));
+        transform: translateY(2px);
+      }
+
+      .white-key:focus-visible,
+      .black-key:focus-visible,
+      .action:focus-visible {
+        outline: 3px solid rgba(126, 224, 195, 0.95);
+        outline-offset: 2px;
+      }
+
+      .footer-note {
+        margin: 16px 0 0;
+        color: var(--muted);
+        font: 400 0.96rem/1.6 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      @media (max-width: 900px) {
+        .game {
+          grid-template-columns: 1fr;
+        }
+
+        .target {
+          min-height: 180px;
+        }
       }
 
       @media (max-width: 640px) {
         body {
-          padding: 16px;
+          padding: 12px;
         }
 
         main {
-          border-radius: 24px;
+          border-radius: 22px;
         }
 
-        main::after {
-          inset: 10px;
-        }
-
-        .links {
-          flex-direction: column;
-        }
-
-        a {
+        .hud {
+          grid-template-columns: 1fr;
           width: 100%;
-          text-align: center;
+        }
+
+        .keyboard {
+          min-width: 640px;
         }
       }
     </style>
   </head>
   <body>
     <main>
-      <p class="eyebrow">GitHub Pages</p>
-      <h1>Ayane の<br /><span class="accent">Web サイト</span></h1>
-      <div class="rule" aria-hidden="true"></div>
-      <p class="lead">
-        このページは、GitHub Pages で公開するためのシンプルなトップページです。
-        必要に応じて、プロフィールやリンク、作品紹介をここに追加できます。
-      </p>
-      <div class="links">
-        <a href="/" rel="noreferrer">Open Site</a>
-        <a href="https://github.com/Ayane-r13/ayane-site" rel="noreferrer"
-          >GitHub Repo</a
-        >
-      </div>
-      <section class="meta" aria-label="Site notes">
-        <div class="card">
-          <strong>About</strong>
-          <span>やわらかい色合いと余白で、落ち着いた印象にしています。</span>
+      <div class="topbar">
+        <div>
+          <p class="eyebrow">German note trainer</p>
+          <h1>ドイツ語音階を当てる</h1>
+          <p class="sub">
+            表示されたドイツ語音階に合う鍵盤をクリックしてください。正解すると次の問題に進み、合計10問まで続きます。
+          </p>
         </div>
-        <div class="card">
-          <strong>Update</strong>
-          <span>この部分は、あとから作品紹介や SNS への導線に差し替えできます。</span>
+        <div class="hud" aria-label="Game status">
+          <div class="stat">
+            <span>Round</span>
+            <strong id="roundText">1 / 10</strong>
+          </div>
+          <div class="stat">
+            <span>Score</span>
+            <strong id="scoreText">0</strong>
+          </div>
+          <div class="stat">
+            <span>State</span>
+            <strong id="stateText">Play</strong>
+          </div>
+        </div>
+      </div>
+
+      <section class="game">
+        <div class="card target">
+          <p class="target-label">Target note</p>
+          <p class="note" id="targetNote" aria-live="polite">C</p>
+          <p class="feedback" id="feedback" aria-live="polite">鍵盤をクリックしてください。</p>
+          <div class="buttons">
+            <button class="action" id="nextButton" type="button">最初からやり直す</button>
+          </div>
+        </div>
+
+        <div class="card keyboard-wrap">
+          <div class="keyboard" id="keyboard" aria-label="One octave piano keyboard"></div>
+          <p class="footer-note">
+            ドイツ語音名: C, Cis, D, Dis, E, F, Fis, G, Gis, A, Ais, H
+          </p>
         </div>
       </section>
     </main>
+
+    <script>
+      const notes = [
+        { german: "C", key: "C", type: "white" },
+        { german: "Cis", key: "C#", type: "black" },
+        { german: "D", key: "D", type: "white" },
+        { german: "Dis", key: "D#", type: "black" },
+        { german: "E", key: "E", type: "white" },
+        { german: "F", key: "F", type: "white" },
+        { german: "Fis", key: "F#", type: "black" },
+        { german: "G", key: "G", type: "white" },
+        { german: "Gis", key: "G#", type: "black" },
+        { german: "A", key: "A", type: "white" },
+        { german: "Ais", key: "A#", type: "black" },
+        { german: "H", key: "B", type: "white" }
+      ];
+
+      const whiteLayout = [
+        { key: "C", left: 0 },
+        { key: "D", left: 60 },
+        { key: "E", left: 120 },
+        { key: "F", left: 180 },
+        { key: "G", left: 240 },
+        { key: "A", left: 300 },
+        { key: "B", left: 360 }
+      ];
+
+      const blackLayout = [
+        { key: "C#", left: 42 },
+        { key: "D#", left: 102 },
+        { key: "F#", left: 222 },
+        { key: "G#", left: 282 },
+        { key: "A#", left: 342 }
+      ];
+
+      const keyboard = document.getElementById("keyboard");
+      const targetNote = document.getElementById("targetNote");
+      const feedback = document.getElementById("feedback");
+      const roundText = document.getElementById("roundText");
+      const scoreText = document.getElementById("scoreText");
+      const stateText = document.getElementById("stateText");
+      const nextButton = document.getElementById("nextButton");
+
+      let currentRound = 1;
+      let score = 0;
+      let finished = false;
+      let target = null;
+
+      function pickTarget() {
+        return notes[Math.floor(Math.random() * notes.length)];
+      }
+
+      function updateHud() {
+        roundText.textContent = `${Math.min(currentRound, 10)} / 10`;
+        scoreText.textContent = String(score);
+        stateText.textContent = finished ? "Done" : "Play";
+      }
+
+      function setFeedback(message, kind) {
+        feedback.textContent = message;
+        feedback.className = `feedback ${kind || ""}`.trim();
+      }
+
+      function clearActive() {
+        const active = keyboard.querySelectorAll(".active");
+        active.forEach((el) => el.classList.remove("active"));
+      }
+
+      function renderTarget() {
+        target = pickTarget();
+        targetNote.textContent = target.german;
+        setFeedback("鍵盤をクリックしてください。", "");
+        updateHud();
+      }
+
+      function finishGame() {
+        finished = true;
+        updateHud();
+        setFeedback(`10問終了。正解数は ${score} / 10 でした。`, "ok");
+      }
+
+      function handleKeyClick(key) {
+        if (finished || !target) {
+          return;
+        }
+
+        clearActive();
+
+        const button = keyboard.querySelector(`[data-key="${key}"]`);
+        if (button) {
+          button.classList.add("active");
+        }
+
+        const matched = key === target.key;
+        if (matched) {
+          score += 1;
+          setFeedback(`正解: ${target.german}`, "ok");
+          updateHud();
+
+          if (currentRound >= 10) {
+            finishGame();
+            return;
+          }
+
+          currentRound += 1;
+          window.setTimeout(() => {
+            if (!finished) {
+              clearActive();
+              renderTarget();
+            }
+          }, 650);
+        } else {
+          setFeedback("不正解。もう一度クリックしてください。", "ng");
+        }
+      }
+
+      function createKey({ key, left }) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "white-key";
+        button.style.left = `${left}px`;
+        button.dataset.key = key;
+        button.innerHTML = `<span class="label">${key === "B" ? "H" : key}</span>`;
+        button.addEventListener("click", () => handleKeyClick(key));
+        keyboard.appendChild(button);
+      }
+
+      function createBlackKey({ key, left }, germanLabel) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "black-key";
+        button.style.left = `${left}px`;
+        button.dataset.key = key;
+        button.innerHTML = `<span class="label">${germanLabel}</span>`;
+        button.addEventListener("click", () => handleKeyClick(key));
+        keyboard.appendChild(button);
+      }
+
+      function buildKeyboard() {
+        whiteLayout.forEach(createKey);
+        blackLayout.forEach((item) => {
+          const note = notes.find((n) => n.key === item.key);
+          createBlackKey(item, note ? note.german : item.key);
+        });
+      }
+
+      nextButton.addEventListener("click", () => {
+        score = 0;
+        currentRound = 1;
+        finished = false;
+        clearActive();
+        renderTarget();
+      });
+
+      buildKeyboard();
+      renderTarget();
+    </script>
   </body>
 </html>
