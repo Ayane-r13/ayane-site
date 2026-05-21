@@ -98,14 +98,14 @@
       }
 
       .splash-card {
-        width: min(100%, 1100px);
-        padding: clamp(18px, 4vw, 30px);
+        width: 100%;
+        padding: 0;
       }
 
       .splash-stage {
         position: relative;
         overflow: hidden;
-        border-radius: 28px;
+        border-radius: 0;
         border: 1px solid rgba(101, 68, 41, 0.16);
         background:
           linear-gradient(180deg, rgba(255, 255, 255, 0.65), rgba(255, 248, 241, 0.92));
@@ -115,14 +115,15 @@
       }
 
       .splash-keyboard-wrap {
-        padding: 18px 18px 16px;
+        padding: 0;
       }
 
       .splash-keyboard {
         position: relative;
+        width: 720px;
         height: 210px;
-        min-width: 720px;
-        border-radius: 18px;
+        transform-origin: top left;
+        border-radius: 0;
         background:
           linear-gradient(180deg, rgba(89, 59, 33, 0.96), rgba(62, 39, 24, 0.98));
         border: 1px solid rgba(255, 230, 200, 0.22);
@@ -509,6 +510,10 @@
         .keyboard {
           min-width: 640px;
         }
+
+        .splash-keyboard {
+          width: 640px;
+        }
       }
 
       h1,
@@ -751,25 +756,37 @@
         });
 
         const blocks = [];
-        for (let i = 0; i < 18; i += 1) {
+        const keyCenters = whiteLayout.map(({ left }) => left + 30);
+        for (let i = 0; i < 13; i += 1) {
           const block = document.createElement("div");
           block.className = "fall-block";
-          const lane = Math.floor(Math.random() * whiteLayout.length);
-          const left = lane * 60 + (i % 3) * 6;
+          const lane = i % whiteLayout.length;
+          const center = keyCenters[lane];
           const duration = 0.9 + Math.random() * 0.7;
           const delay = Math.random() * -1.9;
+          const blockWidth = 60;
+          const left = center - blockWidth / 2;
           block.style.left = `${left}px`;
           block.style.animationDuration = `${duration}s`;
           block.style.animationDelay = `${delay}s`;
-          block.style.width = `${52 + (i % 2) * 8}px`;
+          block.style.width = `${blockWidth}px`;
           block.dataset.baseLeft = String(left);
           block.dataset.duration = String(duration);
           block.dataset.delay = String(delay);
+          block.dataset.center = String(center);
           splashNoteLayer.appendChild(block);
           blocks.push(block);
         }
 
-        const keyboardRect = splashKeyboard.getBoundingClientRect();
+        const baseWidth = 720;
+        const availableWidth = Math.max(
+          320,
+          window.innerWidth - 2 * Math.max(0, parseFloat(getComputedStyle(document.body).paddingLeft) || 24)
+        );
+        const scale = Math.min(1.35, availableWidth / baseWidth);
+        splashKeyboard.style.transform = `scale(${scale})`;
+        splashKeyboard.parentElement.style.height = `${Math.round(210 * scale)}px`;
+
         const windowMs = 3000;
         const start = performance.now();
 
@@ -785,21 +802,21 @@
             const local = (progress + delay + index * 0.06) % duration;
             const ratio = local / duration;
             const x = Number(block.dataset.baseLeft);
+            const center = Number(block.dataset.center);
             const y = -28 + ratio * 240;
             const opacity = Math.min(1, Math.max(0, ratio * 1.2));
             block.style.transform = `translateY(${y}px)`;
             block.style.opacity = String(opacity);
-            block.classList.toggle("hit", y >= activeY && y <= activeY + 30);
+            const aligned = y >= activeY && y <= activeY + 30;
+            block.classList.toggle("hit", aligned);
 
-            const blockLeft = x;
-            const blockRight = x + block.offsetWidth;
             const activeKeys = splashKeys.filter((keyEl) => {
               const keyLeft = Number(keyEl.dataset.left);
               const keyWidth = Number(keyEl.dataset.width);
-              return blockRight > keyLeft && blockLeft < keyLeft + keyWidth;
+              return center >= keyLeft && center <= keyLeft + keyWidth;
             });
 
-            if (y >= activeY && y <= activeY + 30) {
+            if (aligned) {
               activeKeys.forEach((keyEl) => keyEl.classList.add("hit"));
             }
           });
