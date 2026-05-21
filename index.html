@@ -26,6 +26,7 @@
         --white-key-active: #ffe7dc;
         --black-key: #2f3447;
         --black-key-active: #6b84ff;
+        --splash-bg: rgba(255, 250, 242, 0.94);
       }
 
       * {
@@ -75,6 +76,111 @@
         box-shadow: var(--shadow);
         backdrop-filter: blur(14px);
         overflow: hidden;
+      }
+
+      .splash {
+        position: fixed;
+        inset: 0;
+        z-index: 30;
+        display: grid;
+        place-items: center;
+        background:
+          radial-gradient(circle at top left, rgba(255, 127, 107, 0.18), transparent 26%),
+          radial-gradient(circle at 80% 15%, rgba(107, 132, 255, 0.18), transparent 28%),
+          linear-gradient(180deg, rgba(255, 252, 248, 0.98), var(--splash-bg));
+        transition: opacity 420ms ease, visibility 420ms ease;
+      }
+
+      .splash.hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      .splash-card {
+        width: min(100%, 1100px);
+        padding: clamp(18px, 4vw, 30px);
+      }
+
+      .splash-stage {
+        position: relative;
+        overflow: hidden;
+        border-radius: 28px;
+        border: 1px solid rgba(101, 68, 41, 0.16);
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.65), rgba(255, 248, 241, 0.92));
+        box-shadow:
+          0 18px 42px rgba(95, 79, 126, 0.12),
+          inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      }
+
+      .splash-keyboard-wrap {
+        padding: 18px 18px 16px;
+      }
+
+      .splash-keyboard {
+        position: relative;
+        height: 210px;
+        min-width: 720px;
+        border-radius: 18px;
+        background:
+          linear-gradient(180deg, rgba(89, 59, 33, 0.96), rgba(62, 39, 24, 0.98));
+        border: 1px solid rgba(255, 230, 200, 0.22);
+        box-shadow:
+          inset 0 2px 0 rgba(255, 255, 255, 0.1),
+          inset 0 -10px 30px rgba(0, 0, 0, 0.22);
+        overflow: hidden;
+      }
+
+      .splash-note-layer {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      .fall-block {
+        position: absolute;
+        top: -28px;
+        width: 60px;
+        height: 18px;
+        border-radius: 10px;
+        background: linear-gradient(180deg, rgba(255, 183, 82, 0.92), rgba(255, 127, 107, 0.92));
+        box-shadow:
+          0 0 18px rgba(255, 183, 82, 0.45),
+          0 0 30px rgba(255, 127, 107, 0.18);
+        opacity: 0;
+      }
+
+      .fall-block.hit {
+        box-shadow:
+          0 0 18px rgba(255, 233, 163, 0.82),
+          0 0 34px rgba(255, 183, 82, 0.58),
+          inset 0 0 10px rgba(255, 255, 255, 0.55);
+        filter: brightness(1.12);
+      }
+
+      .splash-keyboard .white-key,
+      .splash-keyboard .black-key {
+        pointer-events: none;
+      }
+
+      .splash-keyboard .white-key.hit {
+        box-shadow:
+          inset 0 0 0 2px rgba(255, 195, 132, 0.6),
+          0 0 18px rgba(255, 183, 82, 0.6),
+          inset 0 1px 0 rgba(255, 255, 255, 0.9),
+          inset 0 -14px 18px rgba(156, 120, 86, 0.08),
+          0 1px 0 rgba(255, 255, 255, 0.75);
+        filter: brightness(1.03);
+      }
+
+      .splash-keyboard .black-key.hit {
+        box-shadow:
+          0 0 18px rgba(255, 183, 82, 0.45),
+          0 0 28px rgba(107, 132, 255, 0.2),
+          inset 0 1px 0 rgba(255, 255, 255, 0.14),
+          inset 0 -8px 14px rgba(0, 0, 0, 0.18),
+          0 12px 18px rgba(35, 24, 18, 0.34);
       }
 
       main::before,
@@ -146,9 +252,19 @@
         margin: 0;
         font-size: clamp(2.2rem, 5.5vw, 4.4rem);
         line-height: 0.92;
-        letter-spacing: -0.06em;
-        font-style: italic;
-        font-weight: 700;
+        letter-spacing: -0.02em;
+        font-family:
+          "M PLUS Rounded 1c",
+          "Hiragino Maru Gothic ProN",
+          "Yu Gothic UI",
+          "Yu Gothic",
+          "Noto Sans JP",
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        font-style: normal;
+        font-weight: 800;
         color: #3a2f29;
         text-wrap: balance;
         text-shadow: 0 1px 0 rgba(255, 255, 255, 0.75);
@@ -409,6 +525,14 @@
     </style>
   </head>
   <body>
+    <div class="splash" id="splash" aria-hidden="true">
+      <div class="splash-card">
+        <div class="splash-stage splash-keyboard-wrap">
+          <div class="splash-keyboard" id="splashKeyboard"></div>
+          <div class="splash-note-layer" id="splashNoteLayer"></div>
+        </div>
+      </div>
+    </div>
     <main>
       <div class="topbar">
         <div class="title-block">
@@ -488,6 +612,9 @@
       ];
 
       const keyboard = document.getElementById("keyboard");
+      const splash = document.getElementById("splash");
+      const splashKeyboard = document.getElementById("splashKeyboard");
+      const splashNoteLayer = document.getElementById("splashNoteLayer");
       const targetNote = document.getElementById("targetNote");
       const feedback = document.getElementById("feedback");
       const roundText = document.getElementById("roundText");
@@ -598,6 +725,95 @@
         });
       }
 
+      function buildSplashKeyboard() {
+        const splashKeys = [];
+
+        whiteLayout.forEach(({ key, left }) => {
+          const keyEl = document.createElement("div");
+          keyEl.className = "white-key";
+          keyEl.style.left = `${left}px`;
+          keyEl.dataset.left = String(left);
+          keyEl.dataset.width = "60";
+          keyEl.setAttribute("aria-hidden", "true");
+          splashKeyboard.appendChild(keyEl);
+          splashKeys.push(keyEl);
+        });
+
+        blackLayout.forEach(({ left }) => {
+          const keyEl = document.createElement("div");
+          keyEl.className = "black-key";
+          keyEl.style.left = `${left}px`;
+          keyEl.dataset.left = String(left);
+          keyEl.dataset.width = "38";
+          keyEl.setAttribute("aria-hidden", "true");
+          splashKeyboard.appendChild(keyEl);
+          splashKeys.push(keyEl);
+        });
+
+        const blocks = [];
+        for (let i = 0; i < 18; i += 1) {
+          const block = document.createElement("div");
+          block.className = "fall-block";
+          const lane = Math.floor(Math.random() * whiteLayout.length);
+          const left = lane * 60 + (i % 3) * 6;
+          const duration = 0.9 + Math.random() * 0.7;
+          const delay = Math.random() * -1.9;
+          block.style.left = `${left}px`;
+          block.style.animationDuration = `${duration}s`;
+          block.style.animationDelay = `${delay}s`;
+          block.style.width = `${52 + (i % 2) * 8}px`;
+          block.dataset.baseLeft = String(left);
+          block.dataset.duration = String(duration);
+          block.dataset.delay = String(delay);
+          splashNoteLayer.appendChild(block);
+          blocks.push(block);
+        }
+
+        const keyboardRect = splashKeyboard.getBoundingClientRect();
+        const windowMs = 3000;
+        const start = performance.now();
+
+        function frame(now) {
+          const elapsed = now - start;
+          const progress = elapsed / 1000;
+          const activeY = 150;
+          splashKeys.forEach((keyEl) => keyEl.classList.remove("hit"));
+
+          blocks.forEach((block, index) => {
+            const duration = Number(block.dataset.duration);
+            const delay = Number(block.dataset.delay);
+            const local = (progress + delay + index * 0.06) % duration;
+            const ratio = local / duration;
+            const x = Number(block.dataset.baseLeft);
+            const y = -28 + ratio * 240;
+            const opacity = Math.min(1, Math.max(0, ratio * 1.2));
+            block.style.transform = `translateY(${y}px)`;
+            block.style.opacity = String(opacity);
+            block.classList.toggle("hit", y >= activeY && y <= activeY + 30);
+
+            const blockLeft = x;
+            const blockRight = x + block.offsetWidth;
+            const activeKeys = splashKeys.filter((keyEl) => {
+              const keyLeft = Number(keyEl.dataset.left);
+              const keyWidth = Number(keyEl.dataset.width);
+              return blockRight > keyLeft && blockLeft < keyLeft + keyWidth;
+            });
+
+            if (y >= activeY && y <= activeY + 30) {
+              activeKeys.forEach((keyEl) => keyEl.classList.add("hit"));
+            }
+          });
+
+          if (elapsed < windowMs) {
+            requestAnimationFrame(frame);
+          } else {
+            splash.classList.add("hidden");
+          }
+        }
+
+        requestAnimationFrame(frame);
+      }
+
       nextButton.addEventListener("click", () => {
         score = 0;
         currentRound = 1;
@@ -607,6 +823,7 @@
       });
 
       buildKeyboard();
+      buildSplashKeyboard();
       renderTarget();
     </script>
   </body>
